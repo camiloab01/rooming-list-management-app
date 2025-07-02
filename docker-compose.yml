@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: roomlist_db
+    restart: always
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password
+      POSTGRES_DB: roomlist_db
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tech-test-network
+
+  backend:
+    build:
+      context: ./backend
+    container_name: roomlist_backend
+    command: npm run dev
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - '8181:8181'
+    environment:
+      NODE_ENV: development
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: app_user
+      DB_PASSWORD: app_password
+      DB_NAME: roomlist_db
+      PORT: 8181
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - tech-test-network
+
+volumes:
+  postgres_data:
+  node_modules_fe: {}
+
+networks:
+  tech-test-network:
+    driver: bridge
