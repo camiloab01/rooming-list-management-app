@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express'
 import { Pool } from 'pg'
 import fs from 'fs/promises'
 import path from 'path'
+import { roomStatusMapper } from '../utils/roomStatusMapper'
 
 const router = Router()
 const pool = new Pool()
@@ -68,7 +69,9 @@ router.post('/seed', async (req: Request, res: Response) => {
     }
 
     // Insert into rooming_lists
+    //TODO: Ask about status, it was 'Confirmed'? for RoomListId 6. Changed to 'completed'
     for (const rl of roomingLists) {
+      console.log('rl', rl)
       await client.query(
         `INSERT INTO rooming_lists
           (rooming_list_id, event_id, hotel_id, rfp_name, cut_off_date, status, agreement_type)
@@ -79,7 +82,7 @@ router.post('/seed', async (req: Request, res: Response) => {
           rl.hotelId,
           rl.rfpName,
           rl.cutOffDate,
-          rl.status,
+          roomStatusMapper(rl.status),
           rl.agreement_type,
         ]
       )
