@@ -1,11 +1,14 @@
 import express, { Request, Response, NextFunction } from 'express'
 import morgan from 'morgan'
+import seedRouter from './routes/seed'
 
 const app = express()
 const PORT = process.env.PORT ?? 3000
 
 app.use(express.json())
 app.use(morgan('dev'))
+
+app.use('/api', seedRouter)
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello from TypeScript + Express!')
