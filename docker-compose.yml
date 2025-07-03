@@ -10,7 +10,19 @@ services:
       POSTGRES_PASSWORD: app_password
       POSTGRES_DB: roomlist_db
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER']
+      test:
+        [
+          'CMD',
+          'pg_isready',
+          '-h',
+          'localhost',
+          '-p',
+          '5432',
+          '-U',
+          'app_user',
+          '-d',
+          'roomlist_db',
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -35,15 +47,15 @@ services:
       - '8181:8181'
     environment:
       NODE_ENV: development
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_USER: app_user
-      DB_PASSWORD: app_password
-      DB_NAME: roomlist_db
+      PGHOST: db
+      PGPORT: 5432
+      PGUSER: app_user
+      PGPASSWORD: app_password
+      PGDATABASE: roomlist_db
       PORT: 8181
     volumes:
       - ./backend:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./backend/node_modules:/usr/src/app/node_modules
     networks:
       - tech-test-network
 
