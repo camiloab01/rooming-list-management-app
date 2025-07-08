@@ -1,8 +1,14 @@
 import { Router } from 'express'
-import { getGroupedRoomingLists } from '../controllers/roomingListsController'
+import {
+  getGroupedRoomingLists,
+  getRoomingLists,
+} from '../controllers/roomingListsController'
 import { getRoomingListBookings } from '../controllers/roomingListBookingsController'
 
 const router = Router()
+
+// GET /api/rooming-lists
+router.get('/', getRoomingLists)
 
 // GET /api/rooming-lists/grouped
 router.get('/grouped', getGroupedRoomingLists)

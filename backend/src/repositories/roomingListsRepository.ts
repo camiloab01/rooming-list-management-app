@@ -1,6 +1,10 @@
 import { pool } from '../db/pool'
 import { Booking } from '../models/booking'
-import { RoomingListGrouped } from '../models/roomingList'
+import {
+  RoomingListFilters,
+  RoomingListGrouped,
+  RoomingListItem,
+} from '../models/roomingList'
 
 export async function getRoomingListsGroupedByEvent(): Promise<
   RoomingListGrouped[]
@@ -46,5 +50,53 @@ export async function getBookingsByRoomingListId(
   `,
     [roomingListId]
   )
+  return rows
+}
+
+export async function getRoomingLists(
+  filters: RoomingListFilters
+): Promise<RoomingListItem[]> {
+  const conditions: string[] = []
+  const values: any[] = []
+  let idx = 1
+
+  if (filters.eventName) {
+    conditions.push(`event_name ILIKE $${idx++}`)
+    values.push(`%${filters.eventName}%`)
+  }
+  if (filters.rfpName) {
+    conditions.push(`rfp_name ILIKE $${idx++}`)
+    values.push(`%${filters.rfpName}%`)
+  }
+  if (filters.agreementType) {
+    conditions.push(`agreement_type = $${idx++}`)
+    values.push(filters.agreementType)
+  }
+  if (filters.status) {
+    conditions.push(`status = $${idx++}`)
+    values.push(filters.status)
+  }
+
+  const whereClause = conditions.length
+    ? `WHERE ${conditions.join(' AND ')}`
+    : ''
+  const { rows } = await pool.query<RoomingListItem>(
+    `
+    SELECT
+      rooming_list_id,
+      event_id,
+      event_name,
+      hotel_id,
+      rfp_name,
+      cut_off_date,
+      status,
+      agreement_type
+    FROM rooming_lists
+    ${whereClause}
+    ORDER BY rooming_list_id;
+  `,
+    values
+  )
+
   return rows
 }

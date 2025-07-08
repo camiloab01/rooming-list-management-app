@@ -1,5 +1,7 @@
 export interface RoomingListItem {
   rooming_list_id: number
+  event_id: number
+  event_name: string
   hotel_id: number
   rfp_name: string
   cut_off_date: string
@@ -11,4 +13,11 @@ export interface RoomingListGrouped {
   event_id: number
   event_name: string
   rooming_lists: RoomingListItem[]
+}
+
+export interface RoomingListFilters {
+  eventName?: string
+  rfpName?: string
+  agreementType?: 'leisure' | 'staff' | 'artist'
+  status?: 'Active' | 'Closed' | 'Cancelled'
 }
