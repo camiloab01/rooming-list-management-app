@@ -80,6 +80,13 @@ export async function getRoomingLists(
   const whereClause = conditions.length
     ? `WHERE ${conditions.join(' AND ')}`
     : ''
+
+  let orderClause = 'ORDER BY rooming_list_id'
+  if (filters.sortOrder) {
+    const direction = filters.sortOrder.toUpperCase()
+    orderClause = `ORDER BY cut_off_date ${direction}`
+  }
+
   const { rows } = await pool.query<RoomingListItem>(
     `
     SELECT
@@ -93,7 +100,7 @@ export async function getRoomingLists(
       agreement_type
     FROM rooming_lists
     ${whereClause}
-    ORDER BY rooming_list_id;
+    ${orderClause};
   `,
     values
   )

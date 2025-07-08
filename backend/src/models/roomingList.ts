@@ -20,4 +20,5 @@ export interface RoomingListFilters {
   rfpName?: string
   agreementType?: 'leisure' | 'staff' | 'artist'
   status?: 'Active' | 'Closed' | 'Cancelled'
+  sortOrder?: 'asc' | 'desc'
 }

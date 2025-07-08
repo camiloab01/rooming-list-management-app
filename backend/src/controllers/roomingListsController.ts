@@ -21,6 +21,7 @@ export async function getRoomingLists(req: Request, res: Response) {
     rfpName: req.query.rfpName as string,
     agreementType: req.query.agreementType as 'leisure' | 'staff' | 'artist',
     status: req.query.status as 'Active' | 'Closed' | 'Cancelled',
+    sortOrder: (req.query.sortOrder as 'asc' | 'desc') || undefined,
   }
 
   try {
