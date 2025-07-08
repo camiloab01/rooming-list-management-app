@@ -1,4 +1,5 @@
 import { pool } from '../db/pool'
+import { Booking } from '../models/booking'
 import { RoomingListGrouped } from '../models/roomingList'
 
 export async function getRoomingListsGroupedByEvent(): Promise<
@@ -22,5 +23,28 @@ export async function getRoomingListsGroupedByEvent(): Promise<
     GROUP BY event_id, event_name
     ORDER BY event_name;
   `)
+  return rows
+}
+
+export async function getBookingsByRoomingListId(
+  roomingListId: number
+): Promise<Booking[]> {
+  const { rows } = await pool.query<Booking>(
+    `
+    SELECT b.booking_id,
+           b.hotel_id,
+           b.event_id,
+           b.guest_name,
+           b.guest_phone_number,
+           b.check_in_date,
+           b.check_out_date
+    FROM bookings b
+    JOIN rooming_list_bookings rlb
+      ON rlb.booking_id = b.booking_id
+    WHERE rlb.rooming_list_id = $1
+    ORDER BY b.booking_id;
+  `,
+    [roomingListId]
+  )
   return rows
 }
