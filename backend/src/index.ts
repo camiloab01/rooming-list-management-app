@@ -1,30 +1,14 @@
-import express, { Request, Response, NextFunction } from 'express'
+import express from 'express'
 import morgan from 'morgan'
-import seedRouter from './routes/seed'
+import router from './routes'
 
 const app = express()
-const PORT = process.env.PORT ?? 3000
-
-app.use(express.json())
 app.use(morgan('dev'))
+app.use(express.json())
 
-app.use('/api', seedRouter)
+app.use('/api', router)
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello from TypeScript + Express!')
-})
-
-// 404 handler
-app.use((_req: Request, res: Response) => {
-  res.status(404).json({ error: 'Not Found' })
-})
-
-// Global error handler
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-  console.error(err)
-  res.status(500).json({ error: 'Internal Server Error' })
-})
-
+const PORT = process.env.PORT || 8181
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`)
+  console.log(`🚀 Server running on port ${PORT}`)
 })
