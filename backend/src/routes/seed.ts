@@ -38,6 +38,7 @@ router.post('/seed', async (req: Request, res: Response) => {
     const roomingLists: Array<{
       roomingListId: number
       eventId: number
+      eventName: string
       hotelId: number
       rfpName: string
       cutOffDate: string
@@ -73,11 +74,12 @@ router.post('/seed', async (req: Request, res: Response) => {
     for (const rl of roomingLists) {
       await client.query(
         `INSERT INTO rooming_lists
-          (rooming_list_id, event_id, hotel_id, rfp_name, cut_off_date, status, agreement_type)
-         VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+          (rooming_list_id, event_id, event_name, hotel_id, rfp_name, cut_off_date, status, agreement_type)
+         VALUES ($1,$2,$3,$4,$5,$6,$7, $8)`,
         [
           rl.roomingListId,
           rl.eventId,
+          rl.eventName,
           rl.hotelId,
           rl.rfpName,
           rl.cutOffDate,

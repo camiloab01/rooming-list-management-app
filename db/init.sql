@@ -23,6 +23,7 @@ CREATE TABLE bookings (
 CREATE TABLE rooming_lists (
   rooming_list_id   SERIAL PRIMARY KEY,
   event_id          INTEGER NOT NULL,
+  event_name        VARCHAR(255)         NOT NULL,
   hotel_id          INTEGER NOT NULL,
   rfp_name          VARCHAR(255)         NOT NULL,
   cut_off_date      DATE                 NOT NULL,
