@@ -1,16 +1,8 @@
-//TODO: Refactor this
-export const roomStatusMapper = (status: string): string => {
-  let mappedStatus = ''
-  switch (status) {
-    case 'received':
-      mappedStatus = 'Active'
-      break
-    case 'completed':
-      mappedStatus = 'Closed'
-      break
-    case 'archived':
-      mappedStatus = 'Cancelled'
-      break
-  }
-  return mappedStatus
+const roomStatusMap: Record<string, string> = {
+  received: 'Active',
+  completed: 'Closed',
+  archived: 'Cancelled',
 }
+
+export const roomStatusMapper = (status: string): string =>
+  roomStatusMap[status] ?? ''

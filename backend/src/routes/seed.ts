@@ -71,7 +71,6 @@ router.post('/seed', async (req: Request, res: Response) => {
     // Insert into rooming_lists
     //TODO: Ask about status, it was 'Confirmed'? for RoomListId 6. Changed to 'completed'
     for (const rl of roomingLists) {
-      console.log('rl', rl)
       await client.query(
         `INSERT INTO rooming_lists
           (rooming_list_id, event_id, hotel_id, rfp_name, cut_off_date, status, agreement_type)
