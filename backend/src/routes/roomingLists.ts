@@ -4,16 +4,17 @@ import {
   getRoomingLists,
 } from '../controllers/roomingListsController'
 import { getRoomingListBookings } from '../controllers/roomingListBookingsController'
+import { jwtAuth } from '../middleware/jwtAuth'
 
 const router = Router()
 
 // GET /api/rooming-lists
-router.get('/', getRoomingLists)
+router.get('/', jwtAuth, getRoomingLists)
 
 // GET /api/rooming-lists/grouped
-router.get('/grouped', getGroupedRoomingLists)
+router.get('/grouped', jwtAuth, getGroupedRoomingLists)
 
 // GET /api/rooming-lists/:id/bookings
-router.get('/:id/bookings', getRoomingListBookings)
+router.get('/:id/bookings', jwtAuth, getRoomingListBookings)
 
 export default router

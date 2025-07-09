@@ -45,14 +45,17 @@ services:
         condition: service_healthy
     ports:
       - '8181:8181'
+    env_file:
+      - .env
     environment:
-      NODE_ENV: development
-      PGHOST: db
-      PGPORT: 5432
-      PGUSER: app_user
-      PGPASSWORD: app_password
-      PGDATABASE: roomlist_db
-      PORT: 8181
+      - JWT_SECRET
+      - PGHOST=db
+      - PGUSER=app_user
+      - PGPASSWORD=app_password
+      - PGDATABASE=roomlist_db
+      - PORT=8181
+      - NODE_ENV=development
+      - PGPORT=5432
     volumes:
       - ./backend:/usr/src/app
       - ./backend/node_modules:/usr/src/app/node_modules

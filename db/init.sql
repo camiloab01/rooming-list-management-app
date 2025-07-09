@@ -40,3 +40,12 @@ CREATE TABLE rooming_list_bookings (
       ON DELETE CASCADE,
   PRIMARY KEY (rooming_list_id, booking_id)
 );
+
+CREATE TABLE users (
+  user_id       SERIAL PRIMARY KEY,
+  username      VARCHAR(50) UNIQUE NOT NULL,
+  password_hash VARCHAR(255)       NOT NULL
+);
+
+INSERT INTO users (username, password_hash)
+VALUES ('admin', '$2b$10$.JhOlJGJ02HVKjxxkD1aYekw6G5vIyS0me5fPwJqDhNqX2Yjoo3xC');
