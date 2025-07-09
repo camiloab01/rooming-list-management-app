@@ -62,6 +62,17 @@ services:
     networks:
       - tech-test-network
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: roomlist_frontend
+    ports:
+      - '5173:80'
+    depends_on:
+      - backend
+    networks:
+      - tech-test-network
 volumes:
   postgres_data:
   node_modules_fe: {}
