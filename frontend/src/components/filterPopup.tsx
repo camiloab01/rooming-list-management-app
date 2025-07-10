@@ -54,7 +54,7 @@ export default function FilterPopup({
       ref={ref}
       className="absolute z-20 top-full mt-2 -right-20 w-48 bg-white border rounded-lg shadow-lg p-4"
     >
-      <h2 className="text-xs font-semibold text-gray-500 mb-2">RFP STATUS</h2>
+      <h2 className="text-xs font-normal text-gray-500 mb-2">RFP STATUS</h2>
       <div className="space-y-2 mb-4">
         {ALL_STATUSES.map((s) => (
           <label key={s} className="flex items-center space-x-2">
