@@ -8,6 +8,8 @@ export interface RoomingListItem {
   status: 'Active' | 'Closed' | 'Cancelled'
   agreement_type: 'leisure' | 'staff' | 'artist'
   bookingCount: number
+  startDate: string
+  endDate: string
 }
 
 export interface RoomingListGrouped {

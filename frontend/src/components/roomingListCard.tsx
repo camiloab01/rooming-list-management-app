@@ -28,7 +28,15 @@ export default function RoomingListCard(props: RoomingListCardProps) {
       {/* Date range */}
       <div className="flex items-center text-gray-500 text-sm mb-4">
         <CalendarDaysIcon className="w-4 h-4 mr-1" />
-        <span>{rl.date_range}</span>
+        <span>
+          {`${new Date(rl.startDate).toLocaleString('default', {
+            month: 'short',
+            day: 'numeric',
+          })} - ${new Date(rl.endDate).toLocaleString('default', {
+            month: 'short',
+            day: 'numeric',
+          })}, ${new Date(rl.startDate).getFullYear()}`}
+        </span>
       </div>
       {/* Actions */}
       <div className="flex space-x-2">

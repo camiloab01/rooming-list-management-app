@@ -11,29 +11,37 @@ export async function getRoomingListsGroupedByEvent(): Promise<
 > {
   const { rows } = await pool.query<RoomingListGrouped>(`
     SELECT
-        rl.event_id,
-        rl.event_name,
-        json_agg(
-          json_build_object(
-            'rooming_list_id', rl.rooming_list_id,
-            'hotel_id',         rl.hotel_id,
-            'rfp_name',         rl.rfp_name,
-            'cut_off_date',     rl.cut_off_date,
-            'status',           rl.status,
-            'agreement_type',   rl.agreement_type,
-            'bookingCount',     COALESCE(bc.count, 0)
-          )
-          ORDER BY rl.rooming_list_id
-        ) AS rooming_lists
-      FROM rooming_lists rl
-      LEFT JOIN (
-        SELECT rooming_list_id, COUNT(*) AS count
-        FROM rooming_list_bookings
-        GROUP BY rooming_list_id
-      ) bc
-        ON bc.rooming_list_id = rl.rooming_list_id
-      GROUP BY rl.event_id, rl.event_name
-      ORDER BY rl.event_name;
+      rl.event_id,
+      rl.event_name,
+      json_agg(
+        json_build_object(
+          'rooming_list_id', rl.rooming_list_id,
+          'hotel_id',         rl.hotel_id,
+          'rfp_name',         rl.rfp_name,
+          'cut_off_date',     rl.cut_off_date,
+          'status',           rl.status,
+          'agreement_type',   rl.agreement_type,
+          'bookingCount',     COALESCE(agg.count, 0),
+          'startDate',        agg.start_date,
+          'endDate',          agg.end_date
+        )
+        ORDER BY rl.rooming_list_id
+      ) AS rooming_lists
+    FROM rooming_lists rl
+    LEFT JOIN (
+      SELECT
+        rlb.rooming_list_id,
+        COUNT(*)                       AS count,
+        MIN(b.check_in_date)::text     AS start_date,
+        MAX(b.check_out_date)::text    AS end_date
+      FROM rooming_list_bookings rlb
+      JOIN bookings b
+        ON b.booking_id = rlb.booking_id
+      GROUP BY rlb.rooming_list_id
+    ) agg
+      ON agg.rooming_list_id = rl.rooming_list_id
+    GROUP BY rl.event_id, rl.event_name
+    ORDER BY rl.event_name;
   `)
   return rows
 }
@@ -98,15 +106,30 @@ export async function getRoomingLists(
   const { rows } = await pool.query<RoomingListItem>(
     `
     SELECT
-      rooming_list_id,
-      event_id,
-      event_name,
-      hotel_id,
-      rfp_name,
-      cut_off_date,
-      status,
-      agreement_type
-    FROM rooming_lists
+      rl.rooming_list_id,
+      rl.event_id,
+      rl.event_name,
+      rl.hotel_id,
+      rl.rfp_name,
+      rl.cut_off_date,
+      rl.status,
+      rl.agreement_type,
+      COALESCE(bc.count, 0)               AS "bookingCount",
+      bc.start_date                      AS "startDate",
+      bc.end_date                        AS "endDate"
+    FROM rooming_lists rl
+    LEFT JOIN (
+      SELECT
+        rlb.rooming_list_id,
+        COUNT(*)                       AS count,
+        MIN(b.check_in_date)::text     AS start_date,
+        MAX(b.check_out_date)::text    AS end_date
+      FROM rooming_list_bookings rlb
+      JOIN bookings b
+        ON b.booking_id = rlb.booking_id
+      GROUP BY rlb.rooming_list_id
+    ) bc
+      ON bc.rooming_list_id = rl.rooming_list_id
     ${whereClause}
     ${orderClause};
   `,
