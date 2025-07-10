@@ -1,5 +1,6 @@
 import { ArrowRightIcon, CalendarIcon } from '@heroicons/react/16/solid'
 import type { RoomingList } from '../types/rooming'
+import DateTag from './dateTag'
 
 interface RoomingListCardProps {
   rl: RoomingList
@@ -10,13 +11,8 @@ export default function RoomingListCard(props: RoomingListCardProps) {
 
   return (
     <div className="relative flex-shrink-0 w-72 bg-white rounded-lg shadow p-4">
-      {/* cut-off date badge */}
-      <div className="absolute top-4 right-4 bg-blue-50 text-blue-700 text-sm font-semibold px-2 py-1 rounded">
-        {new Date(rl.cut_off_date).toLocaleString('default', {
-          month: 'short',
-          day: 'numeric',
-        })}
-      </div>
+      {/* cut-off date tag */}
+      <DateTag cutOffDate={rl.cut_off_date} />
 
       {/* RFP name */}
       <h2 className="font-semibold mb-1">[{rl.rfp_name}]</h2>

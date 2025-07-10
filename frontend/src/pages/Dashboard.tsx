@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import api from '../services/api'
-import { FunnelIcon, CalendarIcon } from '@heroicons/react/24/outline'
+import {
+  AdjustmentsHorizontalIcon,
+  MagnifyingGlassIcon,
+} from '@heroicons/react/24/outline'
 import type { GroupedRoomingLists } from '../types/rooming'
 import EventRoomingListSection from '../components/eventRoomingListSection'
 
@@ -30,7 +33,7 @@ export default function Dashboard() {
   return (
     <div className="p-6 space-y-8">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+      <div className="flex flex-col items-left justify-between space-y-8">
         <h1 className="text-3xl font-bold">Rooming List Management: Events</h1>
         <div className="flex items-center space-x-3">
           {/* Search */}
@@ -42,12 +45,12 @@ export default function Dashboard() {
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
             />
-            <CalendarIcon className="w-5 h-5 text-gray-400 absolute left-3 top-2.5 pointer-events-none" />
+            <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 absolute left-3 top-2.5 pointer-events-none" />
           </div>
           {/* Filters (stub) */}
           <button className="flex items-center space-x-1 px-4 py-2 bg-white border rounded-lg hover:bg-gray-50">
-            <FunnelIcon className="w-5 h-5 text-teal-500" />
-            <span className="text-teal-500 font-medium">Filters</span>
+            <span className="font-normal">Filters</span>
+            <AdjustmentsHorizontalIcon className="w-5 h-5 text-teal-500" />
           </button>
         </div>
       </div>
