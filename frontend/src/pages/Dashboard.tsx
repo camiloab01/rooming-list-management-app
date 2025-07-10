@@ -92,16 +92,19 @@ export default function Dashboard() {
             >
               <span>Sort</span>
               {sortOrder === 'asc' ? (
-                <ChevronUpIcon className="w-5 h-5 text-gray-500" />
+                <ChevronUpIcon className="w-5 h-5 text-teal-500" />
               ) : sortOrder === 'desc' ? (
-                <ChevronDownIcon className="w-5 h-5 text-gray-500" />
+                <ChevronDownIcon className="w-5 h-5 text-teal-500" />
               ) : null}
             </button>
             <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block z-10">
               <div className="px-2 py-1 text-xs text-white bg-gray-800 rounded whitespace-nowrap">
-                Toggle sort by cut-off date
+                Toggle sort by cut-off date when clicked. By default, it sorts
+                by roomingListId.
                 <br />
-                (currently {sortOrder ?? 'ID'})
+                <br />
+                (currently{' '}
+                {sortOrder ? `cut-off ${sortOrder}` : 'roomingListId'})
               </div>
             </div>
           </div>
