@@ -7,6 +7,7 @@ export interface RoomingListItem {
   cut_off_date: string
   status: 'Active' | 'Closed' | 'Cancelled'
   agreement_type: 'leisure' | 'staff' | 'artist'
+  bookingCount: number
 }
 
 export interface RoomingListGrouped {

@@ -11,21 +11,29 @@ export async function getRoomingListsGroupedByEvent(): Promise<
 > {
   const { rows } = await pool.query<RoomingListGrouped>(`
     SELECT
-      event_id,
-      event_name,
-      json_agg(
-        json_build_object(
-          'rooming_list_id', rooming_list_id,
-          'hotel_id',         hotel_id,
-          'rfp_name',         rfp_name,
-          'cut_off_date',     cut_off_date,
-          'status',           status,
-          'agreement_type',   agreement_type
-        ) ORDER BY rooming_list_id
-      ) AS rooming_lists
-    FROM rooming_lists
-    GROUP BY event_id, event_name
-    ORDER BY event_name;
+        rl.event_id,
+        rl.event_name,
+        json_agg(
+          json_build_object(
+            'rooming_list_id', rl.rooming_list_id,
+            'hotel_id',         rl.hotel_id,
+            'rfp_name',         rl.rfp_name,
+            'cut_off_date',     rl.cut_off_date,
+            'status',           rl.status,
+            'agreement_type',   rl.agreement_type,
+            'bookingCount',     COALESCE(bc.count, 0)
+          )
+          ORDER BY rl.rooming_list_id
+        ) AS rooming_lists
+      FROM rooming_lists rl
+      LEFT JOIN (
+        SELECT rooming_list_id, COUNT(*) AS count
+        FROM rooming_list_bookings
+        GROUP BY rooming_list_id
+      ) bc
+        ON bc.rooming_list_id = rl.rooming_list_id
+      GROUP BY rl.event_id, rl.event_name
+      ORDER BY rl.event_name;
   `)
   return rows
 }
