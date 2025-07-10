@@ -37,15 +37,23 @@ export default function Dashboard() {
         <h1 className="text-3xl font-bold">Rooming List Management: Events</h1>
         <div className="flex items-center space-x-3">
           {/* Search */}
-          <div className="relative">
+          <div className="relative inline-block">
+            <div className="w-10 h-10 rounded bg-gray-100 absolute left-1 top-[4px] p-2 border border-[#E4ECF2]">
+              <MagnifyingGlassIcon className="w-5 h-5 text-gray-400" />
+            </div>
             <input
               type="text"
               placeholder="Search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400"
+              className="
+                w-72 h-12 
+                pl-12     /* 3rem padding so text starts 0.75rem right of the icon */
+                pr-4 py-2 
+                border rounded-lg 
+                focus:outline-none focus:ring-2 focus:ring-teal-400
+              "
             />
-            <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 absolute left-3 top-2.5 pointer-events-none" />
           </div>
           {/* Filters (stub) */}
           <button className="flex items-center space-x-1 px-4 py-2 bg-white border rounded-lg hover:bg-gray-50">
