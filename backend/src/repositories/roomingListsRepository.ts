@@ -22,8 +22,8 @@ export async function getRoomingListsGroupedByEvent(
     values.push(`%${filters.rfpName}%`)
   }
   if (filters.agreementType) {
-    conditions.push(`rl.agreement_type = $${idx++}`)
-    values.push(filters.agreementType)
+    conditions.push(`rl.agreement_type::text ILIKE $${idx++}`)
+    values.push(`%${filters.agreementType}%`)
   }
   if (filters.status) {
     conditions.push(`rl.status = $${idx++}`)
@@ -31,7 +31,7 @@ export async function getRoomingListsGroupedByEvent(
   }
 
   const whereClause = conditions.length
-    ? `WHERE ${conditions.join(' AND ')}`
+    ? `WHERE ${conditions.join(' OR ')}`
     : ''
 
   const listOrder = filters.sortOrder

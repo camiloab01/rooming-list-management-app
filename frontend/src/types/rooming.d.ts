@@ -16,3 +16,11 @@ export interface GroupedRoomingLists {
   event_name: string
   rooming_lists: RoomingList[]
 }
+
+export interface RoomingListFilters {
+  eventName?: string
+  rfpName?: string
+  agreementType?: string
+  status?: 'Active' | 'Closed' | 'Cancelled'
+  sortOrder?: 'asc' | 'desc'
+}

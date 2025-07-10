@@ -21,7 +21,7 @@ export interface RoomingListGrouped {
 export interface RoomingListFilters {
   eventName?: string
   rfpName?: string
-  agreementType?: 'leisure' | 'staff' | 'artist'
+  agreementType?: string
   status?: 'Active' | 'Closed' | 'Cancelled'
   sortOrder?: 'asc' | 'desc'
 }

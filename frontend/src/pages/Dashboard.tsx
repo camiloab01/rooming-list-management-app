@@ -4,7 +4,7 @@ import {
   AdjustmentsHorizontalIcon,
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline'
-import type { GroupedRoomingLists } from '../types/rooming'
+import type { GroupedRoomingLists, RoomingListFilters } from '../types/rooming'
 import EventRoomingListSection from '../components/eventRoomingListSection'
 import FilterPopup, { type Filters } from '../components/filterPopup'
 
@@ -16,27 +16,27 @@ export default function Dashboard() {
   const [filters, setFilters] = useState<Filters>({ status: [] })
   const [isFilterOpen, setFilterOpen] = useState(false)
 
+  // whenever search or filters change, re-fetch
   useEffect(() => {
     setLoading(true)
-    api
-      .get<GroupedRoomingLists[]>('/rooming-lists/grouped')
-      .then((res) => setData(res.data))
-      .finally(() => setLoading(false))
-  }, [])
 
-  const filtered = data
-    .map((group) => ({
-      ...group,
-      rooming_lists: group.rooming_lists.filter((rl) => {
-        const matchesSearch = rl.rfp_name
-          .toLowerCase()
-          .includes(search.toLowerCase())
-        const matchesStatus =
-          filters.status.length === 0 || filters.status.includes(rl.status)
-        return matchesSearch && matchesStatus
-      }),
-    }))
-    .filter((group) => group.rooming_lists.length > 0)
+    const params: RoomingListFilters = {}
+    if (search) {
+      params.eventName = search
+      params.rfpName = search
+      params.agreementType = search
+    }
+    if (filters.status.length > 0) {
+      // backend only supports a single status filter
+      params.status = filters.status[0]
+    }
+
+    api
+      .get<GroupedRoomingLists[]>('/rooming-lists/grouped', { params })
+      .then((res) => setData(res.data))
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [search, filters])
 
   return (
     <div className="p-6 space-y-8">
@@ -87,7 +87,7 @@ export default function Dashboard() {
       {loading && <div className="text-center">Loading…</div>}
 
       {/* Event groups */}
-      {filtered.map((group) => (
+      {data.map((group) => (
         <EventRoomingListSection
           key={group.event_id}
           eventName={group.event_name}

@@ -10,7 +10,7 @@ export async function getGroupedRoomingLists(req: Request, res: Response) {
     const filters: RoomingListFilters = {
       eventName: req.query.eventName as string,
       rfpName: req.query.rfpName as string,
-      agreementType: req.query.agreementType as 'leisure' | 'staff' | 'artist',
+      agreementType: req.query.agreementType as string,
       status: req.query.status as 'Active' | 'Closed' | 'Cancelled',
       sortOrder: (req.query.sortOrder as 'asc' | 'desc') || undefined,
     }
