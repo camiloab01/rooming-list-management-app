@@ -3,6 +3,8 @@ import api from '../services/api'
 import {
   AdjustmentsHorizontalIcon,
   MagnifyingGlassIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
 } from '@heroicons/react/24/outline'
 import type { GroupedRoomingLists, RoomingListFilters } from '../types/rooming'
 import EventRoomingListSection from '../components/eventRoomingListSection'
@@ -15,6 +17,11 @@ export default function Dashboard() {
 
   const [filters, setFilters] = useState<Filters>({ status: [] })
   const [isFilterOpen, setFilterOpen] = useState(false)
+
+  // sortOrder: undefined = default (by id), 'asc' or 'desc' for cut-off date
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | undefined>(
+    undefined
+  )
 
   // whenever search or filters change, re-fetch
   useEffect(() => {
@@ -31,12 +38,16 @@ export default function Dashboard() {
       console.log('Setting status filter:', filters.status)
     }
 
+    if (sortOrder) {
+      params.sortOrder = sortOrder
+    }
+
     api
       .get<GroupedRoomingLists[]>('/rooming-lists/grouped', { params })
       .then((res) => setData(res.data))
       .catch(console.error)
       .finally(() => setLoading(false))
-  }, [search, filters])
+  }, [search, filters, sortOrder])
 
   return (
     <div className="p-6 space-y-8">
@@ -81,6 +92,22 @@ export default function Dashboard() {
               onClose={() => setFilterOpen(false)}
             />
           </div>
+          {/* Sort toggle */}
+          <button
+            onClick={() => setSortOrder((o) => (o === 'asc' ? 'desc' : 'asc'))}
+            className="flex items-center space-x-1 px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 h-12 cursor-pointer"
+          >
+            <span className="text-sm font-medium">Sort</span>
+            {sortOrder ? (
+              sortOrder === 'asc' ? (
+                <ChevronUpIcon className="w-5 h-5 text-gray-500 text-teal-500" />
+              ) : (
+                <ChevronDownIcon className="w-5 h-5 text-gray-500 text-teal-500" />
+              )
+            ) : (
+              <></>
+            )}
+          </button>
         </div>
       </div>
 
