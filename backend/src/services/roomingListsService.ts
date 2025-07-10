@@ -4,8 +4,8 @@ import {
   getRoomingListsGroupedByEvent,
 } from '../repositories/roomingListsRepository'
 
-export async function fetchGroupedRoomingLists() {
-  return getRoomingListsGroupedByEvent()
+export async function fetchGroupedRoomingLists(filters: RoomingListFilters) {
+  return getRoomingListsGroupedByEvent(filters)
 }
 
 export async function fetchRoomingLists(filters: RoomingListFilters) {

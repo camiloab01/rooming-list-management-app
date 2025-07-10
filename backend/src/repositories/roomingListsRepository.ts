@@ -6,10 +6,40 @@ import {
   RoomingListItem,
 } from '../models/roomingList'
 
-export async function getRoomingListsGroupedByEvent(): Promise<
-  RoomingListGrouped[]
-> {
-  const { rows } = await pool.query<RoomingListGrouped>(`
+export async function getRoomingListsGroupedByEvent(
+  filters: RoomingListFilters
+): Promise<RoomingListGrouped[]> {
+  const conditions: string[] = []
+  const values: any[] = []
+  let idx = 1
+
+  if (filters.eventName) {
+    conditions.push(`rl.event_name ILIKE $${idx++}`)
+    values.push(`%${filters.eventName}%`)
+  }
+  if (filters.rfpName) {
+    conditions.push(`rl.rfp_name ILIKE $${idx++}`)
+    values.push(`%${filters.rfpName}%`)
+  }
+  if (filters.agreementType) {
+    conditions.push(`rl.agreement_type = $${idx++}`)
+    values.push(filters.agreementType)
+  }
+  if (filters.status) {
+    conditions.push(`rl.status = $${idx++}`)
+    values.push(filters.status)
+  }
+
+  const whereClause = conditions.length
+    ? `WHERE ${conditions.join(' AND ')}`
+    : ''
+
+  const listOrder = filters.sortOrder
+    ? `ORDER BY rl.cut_off_date ${filters.sortOrder.toUpperCase()}`
+    : `ORDER BY rl.rooming_list_id`
+
+  const { rows } = await pool.query<RoomingListGrouped>(
+    `
     SELECT
       rl.event_id,
       rl.event_name,
@@ -25,24 +55,31 @@ export async function getRoomingListsGroupedByEvent(): Promise<
           'startDate',        agg.start_date,
           'endDate',          agg.end_date
         )
-        ORDER BY rl.rooming_list_id
+        ${listOrder}
       ) AS rooming_lists
     FROM rooming_lists rl
+
     LEFT JOIN (
       SELECT
         rlb.rooming_list_id,
-        COUNT(*)                       AS count,
-        MIN(b.check_in_date)::text     AS start_date,
-        MAX(b.check_out_date)::text    AS end_date
+        COUNT(*)                    AS count,
+        MIN(b.check_in_date)::text  AS start_date,
+        MAX(b.check_out_date)::text AS end_date
       FROM rooming_list_bookings rlb
       JOIN bookings b
         ON b.booking_id = rlb.booking_id
       GROUP BY rlb.rooming_list_id
     ) agg
       ON agg.rooming_list_id = rl.rooming_list_id
+
+    ${whereClause}
+    
     GROUP BY rl.event_id, rl.event_name
     ORDER BY rl.event_name;
-  `)
+  `,
+    values
+  )
+
   return rows
 }
 
