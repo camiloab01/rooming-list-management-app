@@ -54,36 +54,26 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex flex-col items-left justify-between space-y-8">
         <h1 className="text-3xl font-bold">Rooming List Management: Events</h1>
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-col space-y-4 md:flex-row md:items-center md:space-y-0 md:space-x-4">
           {/* Search */}
-          <div className="relative inline-block">
-            <div className="w-10 h-10 rounded bg-gray-100 absolute left-1 top-[4px] p-2 border border-[#E4ECF2]">
-              <MagnifyingGlassIcon className="w-5 h-5 text-gray-400" />
-            </div>
+          <div className="relative w-72 md:w-auto inline-flex items-center h-12">
+            <MagnifyingGlassIcon className="absolute left-4 w-5 h-5 text-gray-400" />
             <input
               type="text"
               placeholder="Search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="
-                w-72 h-12 
-                pl-12
-                pr-4 py-2 
-                border rounded-lg 
-                focus:outline-none focus:ring-2 focus:ring-teal-400
-                text-sm font-normal
-                placeholder:text-sm placeholder:font-normal
-              "
+              className="h-full w-72 pl-12 pr-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm font-normal placeholder:text-sm placeholder:font-normal"
             />
           </div>
           {/* Filters */}
-          <div className="relative">
+          <div className="relative inline-flex items-center h-12">
             <button
               onClick={() => setFilterOpen((o) => !o)}
-              className="flex items-center space-x-1 px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 h-12 w-28 items-center cursor-pointer"
+              className="w-28 inline-flex items-center justify-center h-full px-4 space-x-2 bg-white border rounded-lg hover:bg-gray-50 text-sm font-medium"
             >
-              <span className="text-sm font-medium">Filters</span>
               <AdjustmentsHorizontalIcon className="w-5 h-5 text-teal-500" />
+              <span>Filters</span>
             </button>
             <FilterPopup
               open={isFilterOpen}
@@ -92,22 +82,29 @@ export default function Dashboard() {
               onClose={() => setFilterOpen(false)}
             />
           </div>
-          {/* Sort toggle */}
-          <button
-            onClick={() => setSortOrder((o) => (o === 'asc' ? 'desc' : 'asc'))}
-            className="flex items-center space-x-1 px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 h-12 cursor-pointer"
-          >
-            <span className="text-sm font-medium">Sort</span>
-            {sortOrder ? (
-              sortOrder === 'asc' ? (
-                <ChevronUpIcon className="w-5 h-5 text-gray-500 text-teal-500" />
-              ) : (
-                <ChevronDownIcon className="w-5 h-5 text-gray-500 text-teal-500" />
-              )
-            ) : (
-              <></>
-            )}
-          </button>
+          {/* Sort */}
+          <div className="relative inline-flex items-center h-12 group w-20">
+            <button
+              onClick={() =>
+                setSortOrder((o) => (o === 'asc' ? 'desc' : 'asc'))
+              }
+              className="w-full inline-flex items-center justify-center h-full px-4 space-x-2 bg-white border rounded-lg hover:bg-gray-50 text-sm font-medium"
+            >
+              <span>Sort</span>
+              {sortOrder === 'asc' ? (
+                <ChevronUpIcon className="w-5 h-5 text-gray-500" />
+              ) : sortOrder === 'desc' ? (
+                <ChevronDownIcon className="w-5 h-5 text-gray-500" />
+              ) : null}
+            </button>
+            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block z-10">
+              <div className="px-2 py-1 text-xs text-white bg-gray-800 rounded whitespace-nowrap">
+                Toggle sort by cut-off date
+                <br />
+                (currently {sortOrder ?? 'ID'})
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
