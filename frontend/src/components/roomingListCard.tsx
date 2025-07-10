@@ -4,6 +4,7 @@ import {
 } from '@heroicons/react/16/solid'
 import type { RoomingList } from '../types/rooming'
 import DateTag from './dateTag'
+import api from '../services/api'
 
 interface RoomingListCardProps {
   rl: RoomingList
@@ -11,6 +12,17 @@ interface RoomingListCardProps {
 
 export default function RoomingListCard(props: RoomingListCardProps) {
   const { rl } = props
+
+  const handleViewBookings = async () => {
+    try {
+      const { data } = await api.get<RoomingList[]>(
+        `/rooming-lists/${rl.rooming_list_id}/bookings`
+      )
+      console.log('Bookings for list', rl.rooming_list_id, data)
+    } catch (err) {
+      console.error('Failed to load bookings', err)
+    }
+  }
 
   return (
     <div className="flex flex-col justify-between relative flex-shrink-0 w-[400px] h-48 bg-white rounded-lg border-1 border-[#E4ECF2] p-4">
@@ -40,7 +52,10 @@ export default function RoomingListCard(props: RoomingListCardProps) {
       </div>
       {/* Actions */}
       <div className="flex space-x-2">
-        <button className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md text-center font-medium cursor-pointer">
+        <button
+          onClick={handleViewBookings}
+          className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-md text-center font-medium cursor-pointer"
+        >
           View Bookings ({rl.bookingCount})
         </button>
         <div className="relative group inline-block">
