@@ -27,8 +27,8 @@ export default function Dashboard() {
       params.agreementType = search
     }
     if (filters.status.length > 0) {
-      // backend only supports a single status filter
-      params.status = filters.status[0]
+      params.status = filters.status
+      console.log('Setting status filter:', filters.status)
     }
 
     api

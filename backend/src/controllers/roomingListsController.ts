@@ -3,15 +3,22 @@ import {
   fetchGroupedRoomingLists,
   fetchRoomingLists,
 } from '../services/roomingListsService'
-import { RoomingListFilters } from '../models/roomingList'
+import { RoomingListFilters, RoomingListStatus } from '../models/roomingList'
 
 export async function getGroupedRoomingLists(req: Request, res: Response) {
   try {
+    let statusFilters: RoomingListStatus[] = []
+    const rawStatus = req.query.status
+    if (typeof rawStatus === 'string') {
+      statusFilters = [rawStatus as RoomingListStatus]
+    } else if (Array.isArray(rawStatus)) {
+      statusFilters = rawStatus as RoomingListStatus[]
+    }
     const filters: RoomingListFilters = {
       eventName: req.query.eventName as string,
       rfpName: req.query.rfpName as string,
       agreementType: req.query.agreementType as string,
-      status: req.query.status as 'Active' | 'Closed' | 'Cancelled',
+      status: statusFilters,
       sortOrder: (req.query.sortOrder as 'asc' | 'desc') || undefined,
     }
     const data = await fetchGroupedRoomingLists(filters)
@@ -24,11 +31,18 @@ export async function getGroupedRoomingLists(req: Request, res: Response) {
 
 export async function getRoomingLists(req: Request, res: Response) {
   try {
+    let statusFilters: RoomingListStatus[] = []
+    const rawStatus = req.query.status
+    if (typeof rawStatus === 'string') {
+      statusFilters = [rawStatus as RoomingListStatus]
+    } else if (Array.isArray(rawStatus)) {
+      statusFilters = rawStatus as RoomingListStatus[]
+    }
     const filters: RoomingListFilters = {
       eventName: req.query.eventName as string,
       rfpName: req.query.rfpName as string,
       agreementType: req.query.agreementType as 'leisure' | 'staff' | 'artist',
-      status: req.query.status as 'Active' | 'Closed' | 'Cancelled',
+      status: statusFilters,
       sortOrder: (req.query.sortOrder as 'asc' | 'desc') || undefined,
     }
     const lists = await fetchRoomingLists(filters)

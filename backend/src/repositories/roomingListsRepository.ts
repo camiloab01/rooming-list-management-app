@@ -25,9 +25,10 @@ export async function getRoomingListsGroupedByEvent(
     conditions.push(`rl.agreement_type::text ILIKE $${idx++}`)
     values.push(`%${filters.agreementType}%`)
   }
-  if (filters.status) {
-    conditions.push(`rl.status = $${idx++}`)
+  if (filters.status && filters.status.length > 0) {
+    conditions.push(`rl.status = ANY($${idx}::rooming_list_status[])`)
     values.push(filters.status)
+    idx++
   }
 
   const whereClause = conditions.length

@@ -5,7 +5,7 @@ export interface RoomingListItem {
   hotel_id: number
   rfp_name: string
   cut_off_date: string
-  status: 'Active' | 'Closed' | 'Cancelled'
+  status: RoomingListStatus
   agreement_type: 'leisure' | 'staff' | 'artist'
   bookingCount: number
   startDate: string
@@ -22,6 +22,8 @@ export interface RoomingListFilters {
   eventName?: string
   rfpName?: string
   agreementType?: string
-  status?: 'Active' | 'Closed' | 'Cancelled'
+  status?: RoomingListStatus[]
   sortOrder?: 'asc' | 'desc'
 }
+
+export type RoomingListStatus = 'Active' | 'Closed' | 'Cancelled'

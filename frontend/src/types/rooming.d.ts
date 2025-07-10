@@ -1,4 +1,5 @@
 export type Status = 'Active' | 'Closed' | 'Cancelled'
+
 export interface RoomingList {
   rooming_list_id: number
   rfp_name: string
@@ -21,6 +22,6 @@ export interface RoomingListFilters {
   eventName?: string
   rfpName?: string
   agreementType?: string
-  status?: 'Active' | 'Closed' | 'Cancelled'
+  status?: Status[]
   sortOrder?: 'asc' | 'desc'
 }
