@@ -1,3 +1,4 @@
+export type Status = 'Active' | 'Closed' | 'Cancelled'
 export interface RoomingList {
   rooming_list_id: number
   rfp_name: string
@@ -7,6 +8,7 @@ export interface RoomingList {
   bookingCount: number
   startDate: string
   endDate: string
+  status: Status
 }
 
 export interface GroupedRoomingLists {

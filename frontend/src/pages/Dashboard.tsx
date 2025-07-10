@@ -6,11 +6,15 @@ import {
 } from '@heroicons/react/24/outline'
 import type { GroupedRoomingLists } from '../types/rooming'
 import EventRoomingListSection from '../components/eventRoomingListSection'
+import FilterPopup, { type Filters } from '../components/filterPopup'
 
 export default function Dashboard() {
   const [data, setData] = useState<GroupedRoomingLists[]>([])
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(false)
+
+  const [filters, setFilters] = useState<Filters>({ status: [] })
+  const [isFilterOpen, setFilterOpen] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -20,13 +24,17 @@ export default function Dashboard() {
       .finally(() => setLoading(false))
   }, [])
 
-  // simple client-side search on event_name or rfp_name
   const filtered = data
     .map((group) => ({
       ...group,
-      rooming_lists: group.rooming_lists.filter((rl) =>
-        rl.rfp_name.toLowerCase().includes(search.toLowerCase())
-      ),
+      rooming_lists: group.rooming_lists.filter((rl) => {
+        const matchesSearch = rl.rfp_name
+          .toLowerCase()
+          .includes(search.toLowerCase())
+        const matchesStatus =
+          filters.status.length === 0 || filters.status.includes(rl.status)
+        return matchesSearch && matchesStatus
+      }),
     }))
     .filter((group) => group.rooming_lists.length > 0)
 
@@ -48,18 +56,31 @@ export default function Dashboard() {
               onChange={(e) => setSearch(e.target.value)}
               className="
                 w-72 h-12 
-                pl-12     /* 3rem padding so text starts 0.75rem right of the icon */
+                pl-12
                 pr-4 py-2 
                 border rounded-lg 
                 focus:outline-none focus:ring-2 focus:ring-teal-400
+                text-sm font-normal
+                placeholder:text-sm placeholder:font-normal
               "
             />
           </div>
-          {/* Filters (stub) */}
-          <button className="flex items-center space-x-1 px-4 py-2 bg-white border rounded-lg hover:bg-gray-50">
-            <span className="font-normal">Filters</span>
-            <AdjustmentsHorizontalIcon className="w-5 h-5 text-teal-500" />
-          </button>
+          {/* Filters */}
+          <div className="relative">
+            <button
+              onClick={() => setFilterOpen((o) => !o)}
+              className="flex items-center space-x-1 px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 h-12 w-28 items-center cursor-pointer"
+            >
+              <span className="text-sm font-medium">Filters</span>
+              <AdjustmentsHorizontalIcon className="w-5 h-5 text-teal-500" />
+            </button>
+            <FilterPopup
+              open={isFilterOpen}
+              filters={filters}
+              onSave={setFilters}
+              onClose={() => setFilterOpen(false)}
+            />
+          </div>
         </div>
       </div>
 
