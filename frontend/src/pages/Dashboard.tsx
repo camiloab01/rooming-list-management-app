@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import api from '../services/api'
 import {
   AdjustmentsHorizontalIcon,
@@ -23,31 +23,49 @@ export default function Dashboard() {
     undefined
   )
 
-  // whenever search or filters change, re-fetch
-  useEffect(() => {
+  const fetchData = useCallback(async () => {
     setLoading(true)
-
-    const params: RoomingListFilters = {}
-    if (search) {
-      params.eventName = search
-      params.rfpName = search
-      params.agreementType = search
+    try {
+      const params: Partial<RoomingListFilters> = {}
+      if (search) {
+        params.eventName = search
+        params.rfpName = search
+        params.agreementType = search
+      }
+      if (filters.status.length > 0) {
+        params.status = filters.status
+      }
+      if (sortOrder) {
+        params.sortOrder = sortOrder
+      }
+      const res = await api.get<GroupedRoomingLists[]>(
+        '/rooming-lists/grouped',
+        { params }
+      )
+      setData(res.data)
+    } catch (err) {
+      console.error('Failed to fetch rooming lists', err)
+    } finally {
+      setLoading(false)
     }
-    if (filters.status.length > 0) {
-      params.status = filters.status
-      console.log('Setting status filter:', filters.status)
-    }
-
-    if (sortOrder) {
-      params.sortOrder = sortOrder
-    }
-
-    api
-      .get<GroupedRoomingLists[]>('/rooming-lists/grouped', { params })
-      .then((res) => setData(res.data))
-      .catch(console.error)
-      .finally(() => setLoading(false))
   }, [search, filters, sortOrder])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
+
+  const handleSeed = async () => {
+    setLoading(true)
+    try {
+      await api.post('/seed')
+      // once seeded, re-fetch
+      await fetchData()
+    } catch (err) {
+      console.error('Failed to seed database', err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="p-6 space-y-8">
@@ -112,7 +130,19 @@ export default function Dashboard() {
       </div>
 
       {loading && <div className="text-center">Loading…</div>}
-
+      {!loading && data.length === 0 && (
+        <div className="flex flex-col items-center justify-center space-y-4">
+          <div className="text-xl text-center text-gray-500 mt-40">
+            No rooming lists found. You might want to seed the databsase.
+          </div>
+          <button
+            onClick={handleSeed}
+            className="w-64 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded text-sm font-medium cursor-pointer"
+          >
+            Insert Bookings and Rooming Lists
+          </button>
+        </div>
+      )}
       {/* Event groups */}
       {data.map((group) => (
         <EventRoomingListSection
