@@ -1,4 +1,4 @@
-# Rooming List Management App
+# Rooming List Management App 🏨
 
 A full‐stack application for managing hotel rooming lists by event, built with:
 
@@ -8,7 +8,7 @@ A full‐stack application for managing hotel rooming lists by event, built with
 
 ---
 
-## Table of Contents
+## Table of Contents 📕
 
 1. [Prerequisites](#prerequisites)
 2. [Getting Started with Docker](#getting-started-with-docker)
@@ -23,7 +23,7 @@ A full‐stack application for managing hotel rooming lists by event, built with
 
 ---
 
-## Prerequisites
+## Prerequisites 🤝
 
 - Docker & docker-compose
 - Node.js ≥ v18 (for local dev)
@@ -31,7 +31,7 @@ A full‐stack application for managing hotel rooming lists by event, built with
 
 ---
 
-## Getting Started with Docker
+## Getting Started with Docker 🐳
 
 All you need to spin up Postgres, the backend API, and the frontend dev server:
 
@@ -65,6 +65,8 @@ docker-compose up -d --build
 
 4. **Seed the database (optional)**
 
+(When you start the frontend there will be a button to seed the database)
+
 ```bash
 curl -X POST http://localhost:8181/seed \
   -H "Authorization: Bearer <your-admin-jwt>"
@@ -81,7 +83,7 @@ curl -X POST http://localhost:8181/seed \
 docker-compose down -v
 ```
 
-## Running Locally (Non-Docker)
+## Running Locally (Non-Docker) 💾
 
 If you prefer to run the frontend on your host for lightning-fast HMR:
 
@@ -89,19 +91,14 @@ If you prefer to run the frontend on your host for lightning-fast HMR:
 # 1) Start DB + backend in Docker
 docker-compose up -d db backend
 
-# 2) In backend/
-cd backend
-npm ci
-npm run dev
-
-# 3) In frontend/
+# 2) In frontend/
 cd ../frontend
 npm ci
 echo "VITE_API_BASE_URL=http://localhost:8181" > .env
 npm run dev
 ```
 
-## Running Locally (Non-Docker)
+## Project Structure 👷🏼‍♂️
 
 ```csharp
 rooming-list-app/
@@ -114,10 +111,13 @@ rooming-list-app/
 │   │   ├── models/           # TS interfaces
 │   │   ├── db/               # Pg pool setup
 │   │   └── routes/           # Express routers
-│   ├── init.sql              # DB schema & enums
 │   ├── Dockerfile
 │   ├── package.json
 │   └── jest.config.js
+|
+|── db/
+|   |── init.sql              # DB schema & enums
+|
 ├── frontend/
 │   ├── src/
 │   │   ├── pages/            # React pages
@@ -131,7 +131,7 @@ rooming-list-app/
 └── README.md
 ```
 
-## Architecture Overview
+## Architecture Overview 🏗️
 
 - Layered Backend
 
@@ -144,7 +144,7 @@ rooming-list-app/
   - Axios with a paramsSerializer (qs) for multi-value filters
   - Tailwind CSS for utility-first styling
 
-## Key Decisions
+## Key Decisions 🔑
 
 - Docker-compose orchestrates Postgres, backend, and frontend dev.
 - JWT authentication guards all API routes.
@@ -152,7 +152,7 @@ rooming-list-app/
 - TypeScript everywhere for type‐safe controllers and queries.
 - Unit & integration tests with Jest & Supertest ensure both SQL and HTTP layers are covered.
 
-## API Reference
+## API Reference 🧮
 
 ### Auth
 
@@ -182,13 +182,13 @@ rooming-list-app/
   - Protected by JWT.
   - Truncates & re-populates from `data/*.json`.
 
-## Frontend Usage
+## Frontend Usage ⚛️
 
 - Search & Filters in the dashboard push your filter values as query params to /`rooming-lists/grouped`.
 - Sort toggles cut-off-date asc/desc and re-fetches.
 - Login stores JWT in `localStorage`, used automatically by Axios.
 
-## Testing
+## Testing 🧪
 
 ### Backend
 
@@ -199,7 +199,7 @@ npm test
 npm test -- --coverage
 ```
 
-## Environment Variables
+## Environment Variables 🍃
 
 Root `.env` (backend):
 
