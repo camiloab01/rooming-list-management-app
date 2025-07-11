@@ -12,25 +12,31 @@ import FilterPopup, { type Filters } from '../components/filterPopup'
 
 export default function Dashboard() {
   const [data, setData] = useState<GroupedRoomingLists[]>([])
-  const [search, setSearch] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState(searchTerm)
   const [loading, setLoading] = useState(false)
-
   const [filters, setFilters] = useState<Filters>({ status: [] })
   const [isFilterOpen, setFilterOpen] = useState(false)
-
-  // sortOrder: undefined = default (by id), 'asc' or 'desc' for cut-off date
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | undefined>(
     undefined
   )
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm)
+    }, 500)
+
+    return () => clearTimeout(handler)
+  }, [searchTerm])
 
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
       const params: Partial<RoomingListFilters> = {}
-      if (search) {
-        params.eventName = search
-        params.rfpName = search
-        params.agreementType = search
+      if (debouncedSearch) {
+        params.eventName = debouncedSearch
+        params.rfpName = debouncedSearch
+        params.agreementType = debouncedSearch
       }
       if (filters.status.length > 0) {
         params.status = filters.status
@@ -48,7 +54,7 @@ export default function Dashboard() {
     } finally {
       setLoading(false)
     }
-  }, [search, filters, sortOrder])
+  }, [debouncedSearch, filters, sortOrder])
 
   useEffect(() => {
     fetchData()
@@ -79,8 +85,8 @@ export default function Dashboard() {
             <input
               type="text"
               placeholder="Search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="h-full w-72 pl-12 pr-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm font-normal placeholder:text-sm placeholder:font-normal"
             />
           </div>
