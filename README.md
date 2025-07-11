@@ -135,7 +135,7 @@ rooming-list-app/
 
 - Layered Backend
 
-  - 1.  Routes → 2. Controllers → 3. Services → 4. Repositories → 5. Postgres
+  - Routes → Controllers → Services → Repositories → Postgres
 
 - Frontend
 
@@ -143,3 +143,78 @@ rooming-list-app/
   - React Router for navigation
   - Axios with a paramsSerializer (qs) for multi-value filters
   - Tailwind CSS for utility-first styling
+
+## Key Decisions
+
+- Docker-compose orchestrates Postgres, backend, and frontend dev.
+- JWT authentication guards all API routes.
+- SQL JSON aggregation in the repo for /rooming-lists/grouped to push heavy work into Postgres.
+- TypeScript everywhere for type‐safe controllers and queries.
+- Unit & integration tests with Jest & Supertest ensure both SQL and HTTP layers are covered.
+
+## API Reference
+
+### Auth
+
+- POST `/api/auth/login`
+
+  - Body: `{ username, password }`
+  - Response: `{ token: <jwt> }`
+
+### Rooming Lists
+
+- GET `/api/rooming-lists`
+
+  - Query: `?eventName=&rfpName=&agreementType=&status[]=…&sortOrder=asc|desc`
+  - Returns a flat array of rooming list items.
+
+- GET `/api/rooming-lists/grouped`
+
+  - Same filters as above.
+  - Returns an array of `{ event_id, event_name, rooming_lists: [ … ] }`.
+
+- GET `/api/rooming-lists/:id/bookings`
+
+  - Path param: :id (number)
+  - Returns all bookings for that rooming list.
+
+- POST `/api/seed`
+  - Protected by JWT.
+  - Truncates & re-populates from `data/*.json`.
+
+## Frontend Usage
+
+- Search & Filters in the dashboard push your filter values as query params to /`rooming-lists/grouped`.
+- Sort toggles cut-off-date asc/desc and re-fetches.
+- Login stores JWT in `localStorage`, used automatically by Axios.
+
+## Testing
+
+### Backend
+
+```bash
+cd backend
+npm ci
+npm test
+npm test -- --coverage
+```
+
+## Environment Variables
+
+Root `.env` (backend):
+
+```dotenv
+PORT=8181
+PGHOST=db
+PGPORT=5432
+PGUSER=app_user
+PGPASSWORD=app_password
+PGDATABASE=roomlist_db
+JWT_SECRET=your_jwt_secret
+```
+
+`frontend/.env`:
+
+```dotenv
+VITE_API_BASE_URL=http://localhost:8181/api
+```
