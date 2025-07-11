@@ -135,11 +135,11 @@ rooming-list-app/
 
 - Layered Backend
 
-1.  Routes → 2. Controllers → 3. Services → 4. Repositories → 5. Postgres
+  - 1.  Routes → 2. Controllers → 3. Services → 4. Repositories → 5. Postgres
 
 - Frontend
 
-- Vite for fast builds & HMR
-- React Router for navigation
-- Axios with a paramsSerializer (qs) for multi-value filters
-- Tailwind CSS for utility-first styling
+  - Vite for fast builds & HMR
+  - React Router for navigation
+  - Axios with a paramsSerializer (qs) for multi-value filters
+  - Tailwind CSS for utility-first styling
