@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
 import {
   AdjustmentsHorizontalIcon,
@@ -9,6 +10,7 @@ import {
 import type { GroupedRoomingLists, RoomingListFilters } from '../types/rooming'
 import EventRoomingListSection from '../components/eventRoomingListSection'
 import FilterPopup, { type Filters } from '../components/filterPopup'
+import { useAuth } from '../contexts/authContext'
 
 export default function Dashboard() {
   const [data, setData] = useState<GroupedRoomingLists[]>([])
@@ -20,6 +22,8 @@ export default function Dashboard() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | undefined>(
     undefined
   )
+  const { logout } = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -73,11 +77,27 @@ export default function Dashboard() {
     }
   }
 
+  const handleLogout = () => {
+    logout()
+    navigate('/login', { replace: true })
+  }
+
   return (
     <div className="p-6 space-y-8">
       {/* Header */}
       <div className="flex flex-col items-left justify-between space-y-8">
-        <h1 className="text-3xl font-bold">Rooming List Management: Events</h1>
+        {/* Header with Logout */}
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">
+            Rooming List Management: Events
+          </h1>
+          <button
+            onClick={handleLogout}
+            className="text-sm text-gray-600 hover:text-gray-800 cursor-pointer"
+          >
+            Logout
+          </button>
+        </div>
         <div className="flex flex-col space-y-4 md:flex-row md:items-center md:space-y-0 md:space-x-4">
           {/* Search */}
           <div className="relative w-72 md:w-auto inline-flex items-center h-12">
