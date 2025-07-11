@@ -63,21 +63,12 @@ docker-compose up -d --build
 - Backend on 8181
 - Frontend on 5173
 
-4. **Seed the database (optional)**
-
-(When you start the frontend there will be a button to seed the database)
-
-```bash
-curl -X POST http://localhost:8181/seed \
-  -H "Authorization: Bearer <your-admin-jwt>"
-```
-
-5. **View your app**
+4. **View your app**
 
 - Backend API docs (via Postman or curl) at `http://localhost:8181`
 - Frontend UI at `http://localhost:5173`
 
-6. **Authentication**
+5. **Authentication**
 
 When you create the db container, additionaly to the `bookings`, `rooming_lists` and `rooming_list_bookings` tables, a `users` table is created and was seeded with an Admin user.
 
@@ -88,6 +79,15 @@ curl -X POST http://localhost:8181/api/auth/login \
 ```
 
 You can use that to obtain a `bearer token`. Or use the login screen `http://localhost:5173/login` with those credential via UI.
+
+6. **Seed the database (optional)**
+
+(When you start the frontend there will be a button to seed the database)
+
+```bash
+curl -X POST http://localhost:8181/seed \
+  -H "Authorization: Bearer <your-admin-jwt>"
+```
 
 7. **Stop everything**
 
