@@ -77,7 +77,19 @@ curl -X POST http://localhost:8181/seed \
 - Backend API docs (via Postman or curl) at `http://localhost:8181`
 - Frontend UI at `http://localhost:5173`
 
-6. **Stop everything**
+6. **Authentication**
+
+When you create the db container, additionaly to the `bookings`, `rooming_lists` and `rooming_list_bookings` tables, a `users` table is created and was seeded with an Admin user.
+
+```bash
+curl -X POST http://localhost:8181/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}'
+```
+
+You can use that to obtain a `bearer token`. Or use the login screen `http://localhost:5173/login` with those credential via UI.
+
+7. **Stop everything**
 
 ```bash
 docker-compose down -v
