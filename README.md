@@ -95,6 +95,8 @@ curl -X POST http://localhost:8181/seed \
 docker-compose down -v
 ```
 
+---
+
 ## Running Locally (Non-Docker) 💾
 
 If you prefer to run the frontend on your host for lightning-fast HMR:
@@ -109,6 +111,8 @@ npm ci
 echo "VITE_API_BASE_URL=http://localhost:8181" > .env
 npm run dev
 ```
+
+---
 
 ## Project Structure 👷🏼‍♂️
 
@@ -143,6 +147,8 @@ rooming-list-app/
 └── README.md
 ```
 
+---
+
 ## Architecture Overview 🏗️
 
 - Layered Backend
@@ -156,6 +162,8 @@ rooming-list-app/
   - Axios with a paramsSerializer (qs) for multi-value filters
   - Tailwind CSS for utility-first styling
 
+---
+
 ## Key Decisions 🔑
 
 - Docker-compose orchestrates Postgres, backend, and frontend dev.
@@ -163,6 +171,8 @@ rooming-list-app/
 - SQL JSON aggregation in the repo for /rooming-lists/grouped to push heavy work into Postgres.
 - TypeScript everywhere for type‐safe controllers and queries.
 - Unit & integration tests with Jest & Supertest ensure both SQL and HTTP layers are covered.
+
+---
 
 ## API Reference 🧮
 
@@ -194,11 +204,15 @@ rooming-list-app/
   - Protected by JWT.
   - Truncates & re-populates from `data/*.json`.
 
+---
+
 ## Frontend Usage ⚛️
 
 - Search & Filters in the dashboard push your filter values as query params to /`rooming-lists/grouped`.
 - Sort toggles cut-off-date asc/desc and re-fetches.
 - Login stores JWT in `localStorage`, used automatically by Axios.
+
+---
 
 ## Testing 🧪
 
@@ -210,6 +224,8 @@ npm ci
 npm test
 npm test -- --coverage
 ```
+
+---
 
 ## Environment Variables 🍃
 
