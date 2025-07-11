@@ -139,6 +139,7 @@ rooming-list-app/
 │   │   ├── pages/            # React pages
 │   │   ├── components/       # UI components
 │   │   └── services/         # Axios API client
+│   │   └── contexts/         # authContext for auth state
 │   ├── index.html
 │   ├── package.json
 │   ├── vite.config.ts
@@ -161,6 +162,7 @@ rooming-list-app/
   - React Router for navigation
   - Axios with a paramsSerializer (qs) for multi-value filters
   - Tailwind CSS for utility-first styling
+  - AuthContext to keep authentication state
 
 ---
 
@@ -168,6 +170,7 @@ rooming-list-app/
 
 - Docker-compose orchestrates Postgres, backend, and frontend dev.
 - JWT authentication guards all API routes.
+- React Context (`AuthContext`) on the frontend centralizes login/logout state, decodes the JWT payload, persists the token in `localStorage`, and automatically injects the `Authorization` header into all Axios requests.
 - SQL JSON aggregation in the repo for /rooming-lists/grouped to push heavy work into Postgres.
 - TypeScript everywhere for type‐safe controllers and queries.
 - Unit & integration tests with Jest & Supertest ensure both SQL and HTTP layers are covered.
@@ -208,9 +211,11 @@ rooming-list-app/
 
 ## Frontend Usage ⚛️
 
-- Search & Filters in the dashboard push your filter values as query params to /`rooming-lists/grouped`.
-- Sort toggles cut-off-date asc/desc and re-fetches.
-- Login stores JWT in `localStorage`, used automatically by Axios.
+- **Search & Filters** in the dashboard push your filter values as query params to `/rooming-lists/grouped`.
+- **Sort** toggles cut-off-date asc/desc and re-fetches.
+- **AuthContext** manages login/logout state:
+  - `login(token)` stores the JWT in React Context (and `localStorage`), decodes user info for global access, and automatically sets the `Authorization` header on all Axios requests.
+  - `logout()` clears the token from both Context and `localStorage`.
 
 ---
 
