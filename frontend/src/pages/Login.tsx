@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../services/api'
 import axios from 'axios'
+import { useAuth } from '../contexts/authContext'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -9,6 +10,7 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const { login } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -17,7 +19,7 @@ export default function Login() {
 
     try {
       const { data } = await api.post('/auth/login', { username, password })
-      localStorage.setItem('jwt', data.token)
+      login(data.token)
       navigate('/dashboard')
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {

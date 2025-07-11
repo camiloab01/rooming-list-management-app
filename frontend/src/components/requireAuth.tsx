@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
+import { useAuth } from '../contexts/authContext'
 
 interface RequireAuthProps {
   children: ReactNode
@@ -16,7 +17,7 @@ function isTokenExpired(token: string): boolean {
 }
 
 export default function RequireAuth({ children }: RequireAuthProps) {
-  const token = localStorage.getItem('jwt')
+  const { token } = useAuth()
   const location = useLocation()
 
   if (!token || isTokenExpired(token)) {
